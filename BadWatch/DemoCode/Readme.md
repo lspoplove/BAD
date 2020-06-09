@@ -22,7 +22,7 @@ https://github.com/adafruit/RTClib
 
 1.Demo is the pre-flashed program of BadWatch.
 
-2.If you find time is not correct , you can flash RTC once, and then flash Demo again.
+2.When you find time is not correct , you can flash demo code again.
 
 3.If you do not use power keep code, watch may be turn off automaticly after 30 seconds.
 
