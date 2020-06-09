@@ -32,6 +32,9 @@ boolean laser_state = HIGH;
 void setup() {
   badUSB();
   Wire.begin();
+  rtc.begin();
+  rtc.adjust(DateTime(__DATE__, __TIME__));
+  
   timer.every(9000, keypower);
   
   sensor.init();
@@ -47,6 +50,7 @@ void setup() {
   
   display.begin(SH1106_SWITCHCAPVCC, 0x3C); 
   display.setTextColor(WHITE);
+  delay(2000);
 }
 
 void loop() {
@@ -181,9 +185,8 @@ void distancedetect(){
    else
    {
     //colorWipe(strip.Color(  0,   0, 255), 50); // Blue
-    colorWipe(strip.Color(  0,   0,   0), 50);    // Black/off
    }*/
-   delay(2000);
+
    digitalWrite(LASER,LOW);
-   colorWipe(strip.Color(  0,   0,   0), 50); 
+   colorWipe(strip.Color(  0,   0,   0), 50); // Black/off
 }
