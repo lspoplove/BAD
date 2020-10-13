@@ -7,6 +7,9 @@ char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursd
 
 void setup () {
 Wire.begin();
+rtc.begin();
+  
+rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 #ifndef ESP8266
   while (!Serial); // for Leonardo/Micro/Zero
 #endif
