@@ -23,6 +23,7 @@ Adafruit_SH1106 display(OLED_RESET);
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIXEL_COUNT, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
 VL53L0X sensor;
 RTC_DS3231 rtc;
+
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 
 boolean button_down_now_state = HIGH;
@@ -30,11 +31,20 @@ boolean button_down_old_state = LOW;
 boolean laser_state = HIGH;
 
 void setup() {
-  badUSB();
-  Wire.begin();
-  rtc.begin();
-  rtc.adjust(DateTime(__DATE__, __TIME__));
+  Serial.begin(9600);
   
+      if(!rtc.begin()) {
+        Serial.println("Couldn't find RTC!");
+        Serial.flush();
+        abort();
+    }
+ 
+    if(rtc.lostPower()) {
+        // this will adjust to the date and time at compilation
+        rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+    }
+  rtc.disable32K();
+
   timer.every(9000, keypower);
   
   sensor.init();
@@ -50,10 +60,13 @@ void setup() {
   
   display.begin(SH1106_SWITCHCAPVCC, 0x3C); 
   display.setTextColor(WHITE);
-  delay(2000);
+  badUSB();
+  //delay(2000);
+  
 }
 
 void loop() {
+  
   timer.tick();
   DateTime now = rtc.now();
   display.clearDisplay();
@@ -97,6 +110,7 @@ void loop() {
       digitalWrite (LASER, laser_state);
         }
       button_down_old_state = button_down_now_state;       //save button state
+      //delay(500);
 }
 
 void BUZZERSOUND()
