@@ -30,21 +30,17 @@ boolean button_down_now_state = HIGH;
 boolean button_down_old_state = LOW;
 boolean laser_state = HIGH;
 
-void setup() {
-  Serial.begin(9600);
-  
-      if(!rtc.begin()) {
-        Serial.println("Couldn't find RTC!");
-        Serial.flush();
-        abort();
-    }
- 
-    if(rtc.lostPower()) {
-        // this will adjust to the date and time at compilation
-        rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-    }
-  rtc.disable32K();
+boolean isRtc = false;
 
+void setup() {
+  
+  Wire.begin();
+  //rtc.disable32K();
+  //rtc.begin();
+  //rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+
+  Serial.begin(115200);
+  
   timer.every(9000, keypower);
   
   sensor.init();
@@ -66,7 +62,6 @@ void setup() {
 }
 
 void loop() {
-  
   timer.tick();
   DateTime now = rtc.now();
   display.clearDisplay();
@@ -195,11 +190,6 @@ void distancedetect(){
     display.display();
     colorWipe(strip.Color(  0, 255,   0), 50); // Green
    }
-   /*
-   else
-   {
-    //colorWipe(strip.Color(  0,   0, 255), 50); // Blue
-   }*/
 
    digitalWrite(LASER,LOW);
    colorWipe(strip.Color(  0,   0,   0), 50); // Black/off
